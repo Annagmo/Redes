@@ -8,7 +8,7 @@ class Rede:
        self.endIP = (self.servidor, self.porta)
        self.posicao = self.conectar()
 
-    def atualizPos(self):
+    def pegaPos(self):
         return self.posicao
     def conectar(self):
         try:
@@ -17,7 +17,7 @@ class Rede:
         except:
             pass
 
-    def enviar(self, dado):
+    def send(self, dado):
         try:
             self.cliente.send(str.encode(dado))
             return self.cliente.recv(2048).decode()

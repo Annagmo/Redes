@@ -6,14 +6,14 @@ servidor = "127.0.0.1"
 porta = 5555 # é uma porta aberta pra aplicações desse tipo
 
 serv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#AF_INET é pra ipv4 e Sock_STREAM é se o fluxo de dados é bidirecional ou n ou q tipo
+#AF_INET é pra ipv4 e Sock_STREAM é ser TCP
 
 try: #vai q o socket tá sendo usado
     serv.bind((servidor, porta))
 except socket.error as err:
     str(err)
 
-serv.listen(4) #jogos com no máximo 4p
+serv.listen(2) #jogos com no máximo 2p
 print("Esperando uma conexão, servidor inicializado.")
 
 
@@ -23,7 +23,7 @@ posicoes = [(0, 0), (100, 100)]
 
 def lePos(str):
     str = str.split(",")
-    return int(str[0], int(str[1]))
+    return int(str[0]), int(str[1])
 
 def criaPos(tupla):
     return str(tupla[0]) + "," + str(tupla[1])
@@ -32,7 +32,7 @@ def criaPos(tupla):
 def threadDeCliente(conexao, jogadorAtual):
     #mandamos a posição inicial p/ cada jogador no inicio das reespectivas conexões.
     #pegando o vec de posições e quebrando as tuplas com a criaPos
-    conexao.send(criaPos(posicoes[jogadorAtual]))
+    conexao.send(str.encode(criaPos(posicoes[jogadorAtual])))
     reply = ""
     while True:
         try:

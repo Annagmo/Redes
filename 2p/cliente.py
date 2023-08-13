@@ -55,15 +55,16 @@ def redrawJan(jogador, janela, jogador2):
 
 def lePos(str):
     str = str.split(",")
-    return int(str[0], int(str[1]))
+    return int(str[0]), int(str[1])
 
 def criaPos(tupla):
     return str(tupla[0]) + "," + str(tupla[1])
 def main():
     rodando = True
     #importando minha rede
-    Mrede = Rede() #conecta ao servidor
-    posIni = lePos(Mrede.atualizPos())
+    mrede = Rede() #conecta ao servidor
+    posIni = lePos(mrede.pegaPos())
+
     #-----------------------
 
     p1 = Jogador(posIni[0], posIni[1], 100, 100, (0, 0, 255))
@@ -72,12 +73,13 @@ def main():
     tempo = pygame.time.Clock()
     
     while rodando:
-        p2Pos = lePos(Mrede.enviar(criaPos((p1.x, p1.y))))
+        tempo.tick(60)
+
+        p2Pos = lePos(mrede.send(criaPos((p1.x, p1.y))))
         p2.x = p2Pos[0]
         p2.y = p2Pos[1]
         p2.atualiza()
 
-        tempo.tick(60)
         for event in pygame.event.get(): #sair jogo
             if event.type == pygame.QUIT:
                 running = False
