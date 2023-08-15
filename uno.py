@@ -42,6 +42,8 @@ def Draw( amount ):
 	cardsDrawn = []
 	for x in range( amount ):
 		cardsDrawn.append( gameDeck.pop( 0 ) )
+		# if deck empty
+			# shuffle all except latest from drawn pile into deck
 	return cardsDrawn
 
 """
@@ -51,12 +53,37 @@ def PlayCard():
 
 # effects
 def Skip():
+	next misses turn
+
 def Reverse():
+	turn = turn * -1
+
 def Color():
+	choose color
+
 def PlusTwo():
+	next draws 2, misses turn
+
 def PlusFour():
+	choose color
+	if chosen color is in hand
+		if true
+			legal = false
+		else
+			legal = true
+
+	if next challenges
+		if illegal
+			draw 4
+		else
+			next draws 6, misses turn
+	else
+		next draws 4, misses turn
 
 # gui pending
+
+# shout?
+# catch uno?
 """
 
 """
@@ -77,10 +104,12 @@ print( "deck", gameDeck )
 
 # draw cards for each player
 for player in range( players ):
-	playerHands.append( Draw( 5 ) )
+	playerHands.append( Draw( 7 ) )
 
 # draw first card
 drawn.append( Draw( 1 ) )
+# while first == +4
+# 	return card to deck
 
 print( "player hands", playerHands )
 print( "drawn pile", drawn )
@@ -89,7 +118,10 @@ print( "drawn pile", drawn )
 gameplay loop
 """
 
-# player turn
+# player[n] turn
+	# if previous player can uno shout but didnt
+		# catch
+		# previous draws 4
 	# check top of drawn for effect cards
 		# if effect
 			# execute its function
@@ -108,4 +140,4 @@ gameplay loop
 		# if current hand == 0
 			# end game
 	# end turn
-	# next player
+	# player[n + turn] turn ( or n + ( turn * 2 ) if skip )
