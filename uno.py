@@ -37,7 +37,7 @@ def Shuffle( deck ):
 		deck[pos], deck[posRand] = deck[posRand], deck[pos]
 	return deck
 
-# draw card
+# draw card from deck
 def Draw( amount ):
 	cardsDrawn = []
 	for x in range( amount ):
@@ -46,45 +46,32 @@ def Draw( amount ):
 			# shuffle all except latest from drawn pile into deck
 	return cardsDrawn
 
-"""
-# basic gameplay
-def CanDraw():
-def PlayCard():
+# is card playable
+def CanPlay( card, topColor, topValue ):
+	if 'n' in card:
+		return True
+	elif ( topColor in card ) or ( topValue in card ):
+		return True
+	
+	return False
 
-# effects
-def Skip():
-	next misses turn
+# has playable card in hand
+def HandCheck( hand, topColor, topValue ):
+	for card in hand:
+		if CanPlay( card, topColor, topValue ):
+			return True
+	return False
 
-def Reverse():
-	turn = turn * -1
+# cycles through players
+def WrapCheck( turn, players ):
+	if turn > players - 1:
+		return 0
+	if turn < 0:
+		return players - 1
+	return turn
 
-def Color():
-	choose color
-
-def PlusTwo():
-	next draws 2, misses turn
-
-def PlusFour():
-	choose color
-	if chosen color is in hand
-		if true
-			legal = false
-		else
-			legal = true
-
-	if next challenges
-		if illegal
-			draw 4
-		else
-			next draws 6, misses turn
-	else
-		next draws 4, misses turn
 
 # gui pending
-
-# shout?
-# catch uno?
-"""
 
 """
 setup game
@@ -100,44 +87,100 @@ turn = random.randint( 0, players - 1 ) # determines current player index
 # setup playing deck
 gameDeck = MakeADeck()
 gameDeck = Shuffle( gameDeck )
-print( "deck", gameDeck )
 
 # draw cards for each player
 for player in range( players ):
-	playerHands.append( Draw( 7 ) )
+	playerHands.append( Draw( 7 ) ) # 7 cards
 
 # draw first card
-drawn.append( Draw( 1 ) )
-# while first == +4
-# 	return card to deck
+while True:
+	gameDeck = Shuffle( gameDeck )
+	drawn.extend( Draw( 1 ) )
+	if drawn[-1] == 'n F': # doesnt accept +4 as first card
+		gameDeck.append( drawn.pop( 0 ) )
+	else:
+		break
 
+top = drawn[-1].split( ' ', 1 )
+topC = top[0]
+topV = top[1]
+
+resolved = True
+
+print( "deck", gameDeck )
 print( "player hands", playerHands )
 print( "drawn pile", drawn )
+print( "current card {}" .format( topC + ' ' + topV ) )
 
-"""
-gameplay loop
-"""
+if topC == 'n': # colors first card if uncolored
+	colorChosen = input( "choose color" )
+	# validity check pending
+	topC = colorChosen
 
-# player[n] turn
-	# if previous player can uno shout but didnt
-		# catch
-		# previous draws 4
-	# check top of drawn for effect cards
-		# if effect
-			# execute its function
-	# draw card if needed
-	# play card
-		# if legal move
-			# remove from hand
-			# add to drawn
-			# if effect
-				# execute its function
-		# else
-			# deny
-			# repeat 'play card'
-		# if current hand == 1
-			# display uno shout button
-		# if current hand == 0
-			# end game
-	# end turn
-	# player[n + turn] turn ( or n + ( turn * 2 ) if skip )
+while True: # gameplay loop
+	print( "{}'s turn" .format( turn + 1 ) )
+
+	if not resolved:
+		if topV == 'S': # skip
+			print( "skipped" )
+			turn = WrapCheck( turn + direction, players )
+			resolved = True
+			continue
+		elif topV == 'T': # +2
+			print( "+2 and skipped" )
+			playerHands[turn].extend( Draw( 2 ) )
+			turn = WrapCheck( turn + direction, players )
+			resolved = True
+			continue
+		elif topV == 'F': # +4
+			# challenge?
+			# if not:
+			print( "+4 and skipped" )
+			playerHands[turn].extend( Draw( 4 ) )
+			# if yes:
+			# if win: playerHands[WrapCheck( turn - direction, players )].extend( Draw( 4 ) )
+			# if lose: playerHands[turn].extend( Draw( 6 ) )
+			turn = WrapCheck( turn + direction, players )
+			resolved = True
+			continue
+
+	while not HandCheck( playerHands[turn], topC, topV ):
+		print( "no playable cards, +1" )
+		playerHands[turn].extend( Draw( 1 ) ) # draws until able to play
+
+	while True:
+		print( "hand", playerHands[turn] )
+		cardChosen = int( input( "choose card index" ) )
+		# validity check pending
+		if CanPlay( playerHands[turn][cardChosen - 1], topC, topV ):
+			print( "ye" )
+			break
+		print( "no ")
+
+	drawn.append( playerHands[turn].pop( cardChosen - 1 ) )
+	top = drawn[-1].split( ' ', 1 )
+	topC = top[0]
+	topV = top[1]
+
+	if topC == 'n': # colors for the uncolored
+		colorChosen = input( "choose color" )
+		# validity check pending
+		topC = colorChosen
+	
+	if topV == 'R': # reverse
+		direction = direction * -1
+	
+	if topV == 'R' or 'S' or 'T' or 'F':
+		resolved = False
+
+	if len( playerHands[turn] ) == 1:
+		print( "uno" ) # button?
+	elif len( playerHands[turn] ) == 0:
+		break
+
+	turn = WrapCheck( turn + direction, players )
+
+	print( "drawn pile", drawn )
+	print( "current card {}" .format( topC + ' ' + topV ) )
+
+print( "you are winner :)" )
