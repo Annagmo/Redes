@@ -54,7 +54,7 @@ def Draw( amount ):
 
 # checks if card is playable
 def CanPlay( card, topColor, topValue ):
-	if 'n' in card:
+	if 'n' in card and challenge == 'n':
 		return True
 	
 	elif ( topColor in card ) or ( topValue in card ):
@@ -94,6 +94,7 @@ players = 4 # 2-4 players
 direction = 1 # 1 or -1 for cw and ccw
 turn = random.randint( 0, players - 1 ) # determines current player index
 resolved = True # whether or not the top card's effect has been resolved
+challenge = 'n'
 
 # setup playing deck
 gameDeck = MakeADeck()
@@ -146,16 +147,30 @@ while True: # gameplay loop
 			continue
 
 		elif topV == 'F': # +4
-			# challenge?
-			# if not:
-			print( "+4 and skipped" )
-			playerHands[turn].extend( Draw( 4 ) )
-			# if yes:
-			# if win: playerHands[WrapCheck( turn - direction, players )].extend( Draw( 4 ) )
-			# if lose: playerHands[turn].extend( Draw( 6 ) )
-			turn = WrapCheck( turn + direction, players )
-			resolved = True
-			continue
+			challenge = input( "challenge? (y/n)" )
+			if challenge == 'y':
+				valid = HandCheck( playerHands[turn - direction], topC, '-' )
+				if valid:
+					print( "+2 fail penalty" )
+					playerHands[turn].extend( Draw( 2 ) )
+					print( "+4 and skipped" )
+					playerHands[turn].extend( Draw( 4 ) )
+					turn = WrapCheck( turn + direction, players )
+					resolved = True
+					challenge = 'n'
+					continue
+				else:
+					print( "+4 penalty for challenged" )
+					playerHands[WrapCheck( turn - direction, players )].extend( Draw( 4 ) )
+					resolved = True
+					challenge = 'n'
+			else:
+				print( "+4 and skipped" )
+				playerHands[turn].extend( Draw( 4 ) )
+				turn = WrapCheck( turn + direction, players )
+				resolved = True
+				challenge = 'n'
+				continue
 
 	while not HandCheck( playerHands[turn], topC, topV ):
 		print( "no playable cards, +1" )
