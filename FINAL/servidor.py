@@ -1,7 +1,8 @@
 import socket 
-from _thread import *
 import random
 import sys
+
+ip4 = "25.60.56.209"
 
 # T = draw two  | R = reverse   | S = skip
 # F = draw four | C = color
@@ -87,7 +88,7 @@ def WrapCheck( turn, players ):
 server stuff
 """
 
-server = "127.0.0.1"
+server = ip4
 port = 5555 # é uma porta aberta pra aplicações desse tipo
 
 serv = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
@@ -174,17 +175,6 @@ def Send( msg, con ):
 def SendGlobal( msg ):
 	for player in playersList:
 		Send( msg, player )
-
-def ClientThread( connection, id ):
-	global playing
-	global playersConnected
-	
-	while True:
-		continue
-	
-	print( "conexão perdida" )
-	playersConnected = playersConnected - 1
-	connection.close()
 				
 playersConnected = 0
 playersList = []
@@ -205,8 +195,6 @@ while True:
 		playersList = playersList + [connection]
 		print( "conectado ao cliente de endereço IP: {}" .format( ipAddr ) )
 		print( "jogadores: {}" .format( playersConnected ) )
-		
-		start_new_thread( ClientThread,( connection, playersConnected ) )
 		
 		Send( "MSG/You are player " + str( playersConnected ), connection )
 		Send( "MSG/Your hand: " + str( playerHands[playersConnected - 1] ) + 
@@ -276,6 +264,7 @@ while True: # gameplay loop
 			challenge = playersList[turn].recv( 32 ).decode( "utf-8" )
 			
 			if challenge == 'Y':
+				Send( "MSG/Challenged's hand: " + playerHands[turn - direction], playersList[turn] )
 				valid = HandCheck( playerHands[turn - direction], topC, '-' )
 				if valid:
 					SendGlobal( "MSG/+2 fail penalty" )
@@ -347,3 +336,6 @@ while True: # gameplay loop
 Send( "MSG/You are winner :)", playersList )
 
 SendGlobal( "END/end" )
+
+for player in playersList:
+	player.close()

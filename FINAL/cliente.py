@@ -1,7 +1,9 @@
 import socket
 import time
 
-server = "127.0.0.1"
+ip4 = "25.60.56.209"
+
+server = ip4
 port = 5555
 
 client = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
@@ -106,12 +108,14 @@ def Receive( msg ):
 		
 		case "END":
 			Send( "ok" )
-			client.close()
+			return info
 
 while True:
 	info = client.recv( 2048 ).decode( "utf-8" )
 
 	if info:
 		info = Receive( info )
+		if info == "end":
+			print( "game over" )
 
 	
