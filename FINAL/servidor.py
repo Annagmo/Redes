@@ -114,7 +114,7 @@ def EncryptHand( hand, top, current ):
 		else:
 			out = out + hand[i] + ','
 
-	return out + '|' + str( top ) + '|' + str( current )
+	return out + '|' + top + '|' + str( current )
 
 """
 game setup
@@ -307,7 +307,8 @@ while True: # gameplay loop
 	
 	Send( "MSG/Your hand: " + str( playerHands[turn] ), playersList[turn] )
 
-	Send( "CAR/" + EncryptHand( playerHands[turn], top, turn ), playersList[turn] )
+	topM = topC + ' ' + topV
+	Send( "CAR/" + EncryptHand( playerHands[turn], topM, turn ), playersList[turn] )
 	cardChosen = playersList[turn].recv( 32 ).decode( "utf-8" )
 
 	for i in range( len( playerHands[turn] ) ):
