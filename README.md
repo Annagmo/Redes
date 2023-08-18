@@ -44,9 +44,11 @@ O UNO é um jogo de cartas com o objetivo de se livrar de todas as cartas da mã
 
 4. **Compra de Cartas:** Se um jogador não puder jogar uma carta válida, ele deve comprar uma carta do baralho. Se a carta comprada for jogável, o jogador pode jogá-la imediatamente.
 
-5. **UNO:** Quando um jogador fica com uma carta em sua mão, ele deve dizer "UNO". Se outro jogador perceber e chamar "UNO" antes que o jogador o faça, o jogador que não disse "UNO" deve comprar cartas adicionais.
+5. **Desafio de Cor:** Quando um jogador joga uma carta de mudança de cor (por exemplo, carta "Mudar Cor" ou "Mais 4"), os jogadores subsequentes podem desafiar a escolha de cor do jogador anterior. O jogador desafiado deve mostrar suas cartas. Se tiver pelo menos uma carta da cor escolhida, o desafiante deve comprar quatro cartas. Caso contrário, o jogador desafiado compra seis cartas.
 
-6. **Vitória:** O jogador que ficar sem cartas na mão primeiro vence a rodada e acumula pontos com base nas cartas restantes nas mãos dos outros jogadores. O jogo geralmente é jogado em várias rodadas, e o jogador com menos pontos no final das rodadas é o vencedor geral.
+6. **UNO:** Quando um jogador fica com uma carta em sua mão, ele deve dizer "UNO". Se outro jogador perceber e chamar "UNO" antes que o jogador o faça, o jogador que não disse "UNO" deve comprar cartas adicionais.
+
+7. **Vitória:** O jogador que ficar sem cartas na mão primeiro vence a rodada e acumula pontos com base nas cartas restantes nas mãos dos outros jogadores. O jogo geralmente é jogado em várias rodadas, e o jogador com menos pontos no final das rodadas é o vencedor geral.
 
 
 Divirta-se jogando o UNO com o sistema cliente-servidor implementado!
